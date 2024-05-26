@@ -12,28 +12,36 @@ export async function getStaticPaths() {
     ).toString()}`
   )
     .then((res) => res.json())
-    .catch();
+    .catch(err => console.log(err));
 
-   console.log(posts)
 
-  return posts.map(({ data: { url, title, description, image  } }) => {
+  const array = posts.map(({ data: { url, title, description, image  } }) => {
       return {
         params: { slug: url },
         props: { title, description, image },
       }
    })
+
+  return array
   
 }
-const { slug } = Astro.params;
+
+let { slug } = Astro.params;
 const { title, description, image } = Astro.props;
 
 const builderModel = import.meta.env.BUILDER_MODEL_NAME;
 const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
-const { data } = await fetch(
-  `https://cdn.builder.io/api/v3/html/${builderModel}?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(`/${slug}`)}`
+
+
+//WARN: trailing slash is not there in dev, but is in prod...
+if (import.meta.env.MODE === 'development') {
+	slug = `/${slug}`
+}
+
+const res  = await fetch(
+  `https://cdn.builder.io/api/v3/html/${builderModel}?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(`${slug}`)}&cachebust=true`
 )
-  .then((res) => res.json())
-  .catch();
+const { data } = await res.json()
 
 ---
 
