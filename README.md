@@ -1,4 +1,4 @@
-# Simple Workflow for Setting Up Static Website
+# Simple Workflow for Setting Up a Static Website
 
 1. Find / create a design in Figma
 2. Import figma design into builder.io

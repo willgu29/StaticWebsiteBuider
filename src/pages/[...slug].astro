@@ -13,7 +13,6 @@ export async function getStaticPaths() {
     .then((res) => res.json())
     .catch(err => console.log(err));
 
-
   const array = posts.map(({ data: { url, title, description, image  } }) => {
       return {
         params: { slug: url },
@@ -30,15 +29,15 @@ const { title, description, image } = Astro.props;
 
 const builderAPIpublicKey = import.meta.env.KEY;
 
-
 //WARN: trailing slash is not there in dev, but is in prod...
-if (import.meta.env.MODE === 'development') {
+if (import.meta.env.MODE === 'development' && slug !== undefined) {
 	slug = `/${slug}`
 }
 
 const res  = await fetch(
-  `https://cdn.builder.io/api/v3/html/page?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(`${slug}`)}&cachebust=true`
+  `https://cdn.builder.io/api/v3/html/page?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(slug || '/')}&cachebust=true`
 )
+
 const { data } = await res.json()
 
 ---
