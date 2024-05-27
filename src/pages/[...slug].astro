@@ -1,9 +1,8 @@
 ---
 export async function getStaticPaths() {
-  const builderModel = import.meta.env.BUILDER_MODEL_NAME;
-  const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
+  const builderAPIpublicKey = import.meta.env.KEY;
   const { results: posts } = await fetch(
-    `https://cdn.builder.io/api/v3/content/${builderModel}?${new URLSearchParams(
+    `https://cdn.builder.io/api/v3/content/page?${new URLSearchParams(
       {
         apiKey: builderAPIpublicKey,
         fields: ["data.url", "data.title", "data.description", "data.image"].join(","),
@@ -29,8 +28,7 @@ export async function getStaticPaths() {
 let { slug } = Astro.params;
 const { title, description, image } = Astro.props;
 
-const builderModel = import.meta.env.BUILDER_MODEL_NAME;
-const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
+const builderAPIpublicKey = import.meta.env.KEY;
 
 
 //WARN: trailing slash is not there in dev, but is in prod...
@@ -39,7 +37,7 @@ if (import.meta.env.MODE === 'development') {
 }
 
 const res  = await fetch(
-  `https://cdn.builder.io/api/v3/html/${builderModel}?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(`${slug}`)}&cachebust=true`
+  `https://cdn.builder.io/api/v3/html/page?apiKey=${builderAPIpublicKey}&url=${encodeURIComponent(`${slug}`)}&cachebust=true`
 )
 const { data } = await res.json()
 
